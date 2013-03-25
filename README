@@ -1,0 +1,16 @@
+Examples of running ESPERR to produce Regulatory Potential scores.
+
+The Makefile in this directory contains a rule to build a Python
+virtualenv that contains all of the bx-python and esperr code
+needed. Just running "make esperr-virtualenv" should get 
+everything set. 
+
+Subdirectories contain rules for producing scores from specific
+multiple alignments.
+
+Alignments need to be downloaded separately and indexed with
+maf_build_index.py
+
+If you want scores in BigWig format you will also need to have
+installed UCSC's wigToBigWig and twoBitInfo (or provide the
+sizes file in some other way). 
