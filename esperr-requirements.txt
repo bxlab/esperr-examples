@@ -1,0 +1,5 @@
+Cython 
+numpy 
+ElementTree 
+https://bitbucket.org/james_taylor/bx-python/get/default.tar.bz2
+https://bitbucket.org/james_taylor/esperr/get/default.tar.bz2

@@ -26,17 +26,14 @@ chr%.covered : $(ALIGN)/chr%.maf
 	$(ESPERR)/maf_covered_ranges.py $(SPECIES) 4 < $< | $(ESPERR)/bed_merge_overlapping.py > $@
 
 chr%.scores : chr%.covered $(ALIGN)/chr%.maf 
-	pv $< \
-	| $(ESPERR)/prefix_lines.py "$(REF)." \
-	| $(ESPERR)/maf_tile_2bit.py $(SPECIES) $(SEQ) $(ALIGN)/chr$*.maf \
-	| $(ESPERR)/maf_translate_chars.py \
-	| $(ESPERR)/rp_score_maf.py /dev/stdin $(MOD).sm /dev/stdout -m $(MOD).mapping -w 100 -s 1 -M $(MODEL) \
-	> $@
+	cat $< | $(ESPERR)/prefix_lines.py "$(REF)." \
+	| $(ESPERR)/maf_tile_2bit.py $(SPECIES) $(SEQ) $(ALIGN)/chr$*.maf | $(ESPERR)/maf_translate_chars.py \
+	| $(ESPERR)/rp_score_maf.py /dev/stdin $(MOD).sm /dev/stdout -m $(MOD).mapping -w 100 -s 1 -M $(MODEL) -r $(REORDER) > $@
 
 $(REF).sizes : $(SEQ)
 	$(UCSC)/twoBitInfo $< $@
 
-chr%.bw : chr%.scores $(REF).sizes
-	$(UCSC)/wigToBigWig $^ $@ -clip
+all.bw : $(foreach r, $(REGIONS), chr$r.scores)
+	cat $^ | $(UCSC)/wigToBigWig /dev/stdin $(REF).sizes $@ -clip
 
 .SECONDARY:
